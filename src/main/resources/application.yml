@@ -6,6 +6,16 @@ spring:
   ai:
     openai:
       api-key: ${SPRINGAI_OPENAI_KEY}
+      chat:
+        options:
+          model: gpt-4
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimension: 1536
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres

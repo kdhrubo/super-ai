@@ -6,6 +6,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +21,9 @@ public class WorldCupFaqRestController {
 
     private final ChatClient chatClient;
 
-    public WorldCupFaqRestController(ChatClient.Builder builder, VectorStore vectorStore) {
+    public WorldCupFaqRestController(ChatClient.Builder builder,
+                                     @Qualifier("simpleVectorStore")
+                                     VectorStore vectorStore) {
         this.chatClient = builder
                 .defaultAdvisors(new QuestionAnswerAdvisor(vectorStore,SearchRequest.defaults()))
                 .build();
