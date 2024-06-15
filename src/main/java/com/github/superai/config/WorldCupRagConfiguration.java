@@ -20,9 +20,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Configuration
-public class RagConfiguration {
+public class WorldCupRagConfiguration {
     
-    private static final Logger log = LoggerFactory.getLogger(RagConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(WorldCupRagConfiguration.class);
 
     @Value("wt20-vectorstore.json")
     private String vectorStoreName;
