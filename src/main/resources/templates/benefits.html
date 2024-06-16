@@ -119,12 +119,12 @@
 <div th:replace="~{navbar :: #navbar}"></div>
 
 
-<main class="container" x-data="wcApp()">
+<main class="container" x-data="benefitApp()">
     <div class="row">
 
         <div class="col-md-12"><h1>JPMC 2023 Benefits</h1></div>
         <div class="col-md-12">
-            <small class="text-success"><i></i>Hi, I am Cheeto. I know everything about 2023 benefits program. Ask me any question</i></small>
+            <small class="text-success"><i></i>Hi, I am Jeempo. I know everything about 2023 benefits program. Ask me any question</i></small>
         </div>
 
     </div>
@@ -133,7 +133,7 @@
 
         <div class="input-group mb-3">
             <input type="text" x-model="message" class="form-control" placeholder="Type your question here" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="getAnswer">Ask</button>
+            <button class="btn btn-outline-primary" type="button" id="button-addon2" @click="getAnswer">Ask</button>
         </div>
 
     </div>
@@ -158,7 +158,7 @@
 
 <script>
 
-    const wcApp = () => ({
+    const benefitApp = () => ({
         message: "",
         faq: "",
         getAnswer(event) {
@@ -167,7 +167,7 @@
 
             console.log('message : ', this.message);
 
-            fetch('http://localhost:8080/v1/api/faq?message='+this.message)
+            fetch('http://localhost:8080/v1/api/benefits?message='+this.message)
                 .then((response) => response.json())
                 .then((data) => {
                     // if the value is not null
