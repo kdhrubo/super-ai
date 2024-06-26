@@ -6,6 +6,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
+
 @Controller
 public class ChatController {
 
@@ -14,7 +16,8 @@ public class ChatController {
     public ChatMessage sendMessage(
             @Payload ChatMessage chatMessage
     ) {
-        return chatMessage;
+         chatMessage.setId(UUID.randomUUID().toString());
+         return chatMessage;
     }
 
     @MessageMapping("/chat.addUser")
@@ -25,6 +28,7 @@ public class ChatController {
     ) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        chatMessage.setId(UUID.randomUUID().toString());
         return chatMessage;
     }
 }

@@ -1,0 +1,1 @@
+Analyze the sentiment of the following chat message: {chatMessage}. Return the result as a single word.
