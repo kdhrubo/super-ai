@@ -1,1 +1,1 @@
-Draft a response to the following chat message: {{it}}
+Draft a response to the following chat message: {it}
