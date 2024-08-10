@@ -8,7 +8,7 @@
 <meta name="description" content="">
 <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Hugo 0.122.0">
-<title>World Cup Cricket T20 2024</title>
+<title>Speedy Date Chat</title>
 
 <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-static/">
 
@@ -17,8 +17,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
     .bd-placeholder-img {
@@ -124,8 +123,20 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">Enter Username to start chatting</h5>
+                        <!--
                         <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" x-model="username"/>
                         <button type="button" class="btn btn-primary" @click="connect">Start Chatting</button>
+                        -->
+
+                        <div class="input-group mb-3">
+
+                            <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" x-model="username"/>
+
+                            <button type="button" class="btn btn-primary" @click="connect">Join</button>
+                        </div>
+
+
+
                     </div>
                 </div>
 
@@ -161,10 +172,14 @@
                                         <template x-if="msg.type == 'CHAT'">
 
                                             <div>
-                                                <span x-text="msg.sender" class="text-primary fw-bold"></span><span>:</span> <span x-text="msg.content"> joined.</span>
+                                                <span x-text="msg.sender" class="text-primary fw-bold"></span><span>:</span> <span x-text="msg.content"></span>
 
-                                                <button class="btn btn-warning">Reply</button>
-                                                <button class="btn btn-secondary" @click="getSentiment(`${msg.id}`, `${msg.content}`)">Check Sentiment</button>
+                                                <i class="bi bi-emoji-grin" style="font-size: 2rem; color: #198754;" x-show="msg?.sentiment == 'Positive'"></i>
+                                                <i class="bi bi-emoji-neutral" style="font-size: 2rem; color: #ffc107;" x-show="msg?.sentiment == 'Neutral'"></i>
+                                                <i class="bi bi-emoji-frown" style="font-size: 2rem; color: #dc3545;"  x-show="msg?.sentiment == 'Negative'"></i>
+
+                                                <button class="btn btn-warning" @click="getChatReply(`${msg.id}`, `${msg.content}`)"><i class="bi bi-reply-fill"></i></button>
+                                                <button class="btn btn-secondary" @click="getSentiment(`${msg.id}`, `${msg.content}`, msg)"><i class="bi bi-cursor-fill"></i></button>
 
                                             </div>
 
@@ -317,12 +332,35 @@
             event.preventDefault();
         },
 
-        getSentiment(messageId, messageContent) {
+        getSentiment(messageId, messageContent, message) {
+
+            console.log('messageId : ', messageId);
+            console.log('messageContent : ', messageContent);
+            console.log('@@@ message : ', message);
+
+            fetch('http://localhost:8080/v1/api/sentiments?message='+messageContent)
+                .then((response) => response.json())
+                .then((data) => {
+                    // if the value is not null
+                    if (data) {
+                        console.log("Data - ", data);
+                        message.sentiment = data.sentiment;
+                    }
+                    else {
+                        console.log("No data");
+                    }
+
+                    this.faq = data;
+                });
+
+        },
+
+        getChatReply(messageId, messageContent) {
 
             console.log('messageId : ', messageId);
             console.log('messageContent : ', messageContent);
 
-            fetch('http://localhost:8080/v1/api/sentiments?message='+messageContent)
+            fetch('http://localhost:8080/v1/api/chatReply?message='+messageContent)
                 .then((response) => response.json())
                 .then((data) => {
                     // if the value is not null
@@ -333,9 +371,8 @@
                         console.log("No data");
                     }
 
-                    this.faq = data;
+                    this.message = data?.reply;
                 });
-
 
         }
     });

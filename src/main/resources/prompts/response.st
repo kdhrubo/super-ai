@@ -1,1 +1,1 @@
-Draft a response to the following chat message: {it}
+Suggest a reply for the following sentence : {chatMessage}

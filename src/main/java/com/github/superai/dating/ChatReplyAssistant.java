@@ -3,33 +3,45 @@
 package com.github.superai.dating;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
+import java.util.HashMap;
+import java.util.Map;
 
-
+@Slf4j
 @Service
 public class ChatReplyAssistant {
 
 	private final ChatClient chatClient;
 
+	@Value("classpath:/prompts/response.st")
+	private Resource responsePrompt;
+
 	public ChatReplyAssistant(ChatClient.Builder modelBuilder) {
 
-		// @formatter:off
-		this.chatClient = modelBuilder
-				.defaultSystem("""
-						You are a customer support representative at Simple Date. Help draft responses in a friendly and respectful manner.
-					""")
-				//.defaultFunctions("getBookingDetails", "changeBooking", "cancelBooking") // FUNCTION CALLING
-				.build();
-		// @formatter:on
+
+		this.chatClient = modelBuilder.build();
+
 	}
 
-	public Flux<String> chat(String userMessageContent) {
+	public String chat(String userMessageContent) {
 
-		return this.chatClient.prompt()
-				.user(userMessageContent)
-				.stream().content();
+		PromptTemplate promptTemplate = new PromptTemplate(responsePrompt);
+		Map<String, Object> promptParameters = new HashMap<>();
+		promptParameters.put("chatMessage", userMessageContent);
+
+		String value =  chatClient.call(promptTemplate.create(promptParameters))
+				.getResult()
+				.getOutput()
+				.getContent();
+
+		log.info("ChatReplyAssistant chat result: {}", value);
+
+		return value;
 	}
 }
