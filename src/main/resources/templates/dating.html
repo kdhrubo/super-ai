@@ -242,13 +242,14 @@
 
                 const id = this.messages.length;
                 this.messages = [
-                    ...this.messages,
                     {
                         id,
                         type: message.type,
                         content: message.content,
                         sender: message.sender
-                    }
+                    },
+                    ...this.messages
+
                 ]
 
                 console.log("messages - {}", this.messages)
